@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CORSAIR Onboarding Manager Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --yellow: #D4A017; --yellow-light: #F5C842;
+    --dark: #1a1a1a; --card-bg: #F5F5F3;
+    --text: #f0f0f0; --muted: #999; --border: rgba(212,160,23,0.25);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: #ffffff; color: var(--text); font-family: 'Barlow', sans-serif; font-size: 15px; line-height: 1.7; }
+
+  /* ── LANDING ── */
+  #landing { min-height: 100vh; display: flex; flex-direction: column; }
+  .land-hero {
+    background: linear-gradient(160deg, #1a1a1a 0%, #2a2000 60%, #1a1a1a 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 64px 40px 56px; position: relative; overflow: hidden; text-align: center;
+  }
+  .land-hero::before { content:''; position:absolute; top:-80px; left:50%; transform:translateX(-50%); width:500px; height:500px; background:radial-gradient(circle,rgba(212,160,23,0.1) 0%,transparent 70%); pointer-events:none; }
+  .logo-row { display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:36px; }
+  .logo-text { font-family:'Barlow Condensed',sans-serif; font-size:22px; font-weight:800; letter-spacing:3px; color:#fff; }
+  .land-hero h1 { font-family:'Barlow Condensed',sans-serif; font-size:56px; font-weight:800; line-height:1.0; color:#fff; margin-bottom:12px; }
+  .land-hero h1 span { color:var(--yellow-light); }
+  .land-sub { font-size:14px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+  .land-desc { font-size:15px; color:#aaa; margin-top:16px; }
+
+  .pick-section { padding: 56px 40px; max-width: 820px; margin: 0 auto; width: 100%; }
+  .pick-label { font-size:22px; letter-spacing:2px; text-transform:uppercase; color:#1a1a1a; font-weight:800; margin-bottom:28px; text-align:center; }
+  .pick-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+
+  .pick-card {
+    background: #ffffff; border: 1px solid #E0DDD5;
+    border-top: 3px solid var(--yellow); border-radius: 12px; padding: 36px 28px;
+    cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; text-align: center;
+  }
+  .pick-card:hover { border-color: var(--yellow); background: #FFFBF0; transform: translateY(-2px); }
+  .pick-icon { font-size: 40px; margin-bottom: 18px; }
+  .pick-title { font-family:'Barlow Condensed',sans-serif; font-size:30px; font-weight:800; color:#1a1a1a; letter-spacing:0.5px; margin-bottom:10px; }
+  .pick-desc { font-size:15px; color:#555; line-height:1.6; margin-bottom:22px; }
+  .pick-btn { display:inline-block; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:var(--dark); background:var(--yellow); border-radius:6px; padding:9px 22px; transition:background 0.2s; }
+  .pick-card:hover .pick-btn { background: var(--yellow-light); }
+
+  /* ── BOOKLETS ── */
+  .booklet { max-width: 820px; margin: 0 auto; padding: 0 0 80px; display:none; }
+  .booklet.active { display:block; }
+
+  .back-bar { background:#1a1a1a; border-bottom:1px solid var(--border); padding:13px 40px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:100; }
+  .back-btn { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; color:#fff; cursor:pointer; background:none; border:none; padding:6px 0; transition:color 0.2s; font-family:'Barlow',sans-serif; }
+  .back-btn:hover { color:var(--yellow-light); }
+  .back-bar-label { font-size:12px; color:#ccc; letter-spacing:1px; }
+
+  .hero { background:linear-gradient(160deg,#1a1a1a 0%,#2a2000 60%,#1a1a1a 100%); border-bottom:1px solid var(--border); padding:56px 40px 48px; position:relative; overflow:hidden; }
+  .hero::before { content:''; position:absolute; top:-60px; right:-60px; width:320px; height:320px; background:radial-gradient(circle,rgba(212,160,23,0.12) 0%,transparent 70%); pointer-events:none; }
+  .hero-logo { display:flex; align-items:center; gap:10px; margin-bottom:36px; }
+  .hero h1 { font-family:'Barlow Condensed',sans-serif; font-size:52px; font-weight:800; line-height:1.0; color:#fff; margin-bottom:16px; }
+  .hero h1 span { color:var(--yellow-light); }
+  .hero-sub { font-size:14px; color:var(--muted); letter-spacing:2px; text-transform:uppercase; }
+
+  .toc { padding:40px 40px; border-bottom:1px solid var(--border); background:#FAFAF8; }
+  .section-label { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:#1a1a1a; font-weight:700; margin-bottom:20px; }
+  .toc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .toc-item { display:flex; align-items:center; gap:14px; padding:16px 18px; background:#fff; border:1px solid #E0DDD5; border-left:4px solid var(--yellow-light); border-radius:8px; cursor:pointer; text-decoration:none; transition:border-color 0.2s,background 0.2s,box-shadow 0.2s; }
+  .toc-item:hover { border-color:var(--yellow); border-left-color:var(--yellow); background:#FFFBF0; box-shadow:0 2px 8px rgba(0,0,0,0.07); }
+  .toc-num { font-family:'Barlow Condensed',sans-serif; font-size:28px; font-weight:800; color:#1a1a1a; line-height:1; min-width:34px; }
+  .toc-title { font-size:16px; font-weight:700; color:#1a1a1a; } .toc-item:hover .toc-title { color:var(--yellow); text-decoration:underline; }
+  .toc-arrow { margin-left:auto; color:var(--yellow); opacity:1; font-size:15px; font-weight:700; transition:opacity 0.2s,transform 0.2s; }
+  .toc-item:hover .toc-arrow { opacity:1; transform:translateX(4px); }
+
+  .section { padding:48px 40px; border-bottom:1px solid rgba(255,255,255,0.05); scroll-margin-top:60px; }
+  .section-heading { font-family:'Barlow Condensed',sans-serif; font-size:34px; font-weight:800; color:#1a1a1a; margin-bottom:6px; }
+  .section-heading .accent { color:#1a1a1a; }
+  .divider { width:48px; height:3px; background:var(--yellow); border-radius:2px; margin:14px 0 24px; }
+  p { color:#444; margin-bottom:14px; }
+  p:last-child { margin-bottom:0; }
+
+  .benefit-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:28px; }
+  .benefit-card { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:10px; padding:20px 16px; border-top:2px solid var(--yellow); }
+  .benefit-title { font-family:'Barlow Condensed',sans-serif; font-size:17px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#1a1a1a; margin-bottom:8px; }
+  .benefit-desc { font-size:15px; color:#666; line-height:1.6; margin:0; }
+
+  .team-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:24px; }
+  .team-card { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:10px; padding:20px 16px; }
+  .team-badge { display:inline-block; font-size:10px; letter-spacing:2px; text-transform:uppercase; font-weight:600; color:var(--dark); background:var(--yellow); padding:3px 8px; border-radius:4px; margin-bottom:12px; }
+  .team-name { font-size:17px; font-weight:600; color:#1a1a1a; margin-bottom:10px; }
+  .team-desc { font-size:15px; color:#666; line-height:1.6; margin:0; }
+  .mentor-criteria { margin-top:12px; padding-top:10px; border-top:0.5px solid rgba(255,255,255,0.06); }
+  .criteria-item { display:flex; gap:8px; font-size:14px; color:#888; margin-bottom:5px; line-height:1.4; }
+  .criteria-dot { color:#1a1a1a; margin-top:2px; flex-shrink:0; }
+
+  .phase-timeline { margin-top:28px; display:flex; flex-direction:column; }
+  .phase-row { display:flex; gap:20px; align-items:stretch; }
+  .phase-connector { display:flex; flex-direction:column; align-items:center; flex-shrink:0; }
+  .phase-dot { width:14px; height:14px; border-radius:50%; background:var(--yellow); flex-shrink:0; margin-top:4px; }
+  .phase-line { width:2px; flex:1; background:#D4A017; min-height:20px; }
+  .phase-content { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:10px; padding:18px 20px; margin-bottom:12px; flex:1; }
+  .phase-title { font-family:'Barlow Condensed',sans-serif; font-size:21px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#1a1a1a; margin-bottom:4px; }
+  .phase-timing { font-size:11px; color:#555; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:12px; }
+
+  .checklist { list-style:none; }
+  .checklist li { display:flex; gap:10px; font-size:15px; color:#444; padding:6px 0; border-bottom:0.5px solid rgba(255,255,255,0.04); line-height:1.4; align-items:flex-start; }
+  .checklist li:last-child { border-bottom:none; }
+  .resp-badge { font-size:11px; letter-spacing:1px; text-transform:uppercase; font-weight:600; padding:2px 7px; border-radius:4px; white-space:nowrap; flex-shrink:0; margin-top:1px; }
+  .badge-mgr { background:rgba(212,160,23,0.15); color:var(--yellow); }
+  .badge-hr { background:#E8F0FE; color:#1a56db; }
+  .checklist-text { display:flex; flex-direction:column; gap:4px; }
+
+  .portal-link { display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--yellow); text-decoration:none; background:rgba(212,160,23,0.1); border:0.5px solid rgba(212,160,23,0.3); border-radius:4px; padding:3px 10px; width:fit-content; font-size:13px; transition:background 0.2s,border-color 0.2s; }
+  .portal-link:hover { background:rgba(212,160,23,0.2); border-color:var(--yellow); }
+
+  .callout { background:#FFFBF0; border:1px solid #E8C84A; border-left:3px solid var(--yellow); border-radius:0 8px 8px 0; padding:16px 20px; margin:24px 0; font-size:15px; color:#555; }
+  .callout strong { color:#C49010; }
+
+  .orient-list { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+  .orient-item { display:flex; align-items:flex-start; gap:12px; background:#F8F7F4; border:1px solid #E0DDD5; border-radius:8px; padding:14px 16px; font-size:15px; color:#444; }
+  .orient-num { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:800; color:#D4B870; min-width:24px; line-height:1.1; }
+
+  .discussion-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px; }
+  .disc-item { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:8px; padding:16px 18px; font-size:15px; color:#444; display:flex; gap:10px; align-items:flex-start; }
+  .disc-arrow { color:#1a1a1a; font-size:12px; margin-top:2px; flex-shrink:0; }
+
+  .equip-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:20px; }
+  .equip-card { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:10px; padding:18px 16px; display:flex; gap:14px; align-items:flex-start; }
+  .equip-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+  .equip-name { font-size:16px; font-weight:500; color:#1a1a1a; }
+  .equip-note { font-size:14px; color:#888; margin-top:3px; }
+
+  .info-card { background:#F8F7F4; border:1px solid #E0DDD5; border-radius:10px; padding:20px; margin-top:16px; }
+  .info-card-title { font-family:'Barlow Condensed',sans-serif; font-size:19px; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:#1a1a1a; margin-bottom:10px; }
+  .info-list { list-style:none; }
+  .info-list li { display:flex; gap:8px; font-size:15px; color:#444; padding:5px 0; border-bottom:0.5px solid rgba(255,255,255,0.04); }
+  .info-list li:last-child { border-bottom:none; }
+  .info-dot { color:#1a1a1a; flex-shrink:0; }
+
+  .conclusion { padding:48px 40px; background:linear-gradient(160deg,#111 0%,#1a1500 100%); }
+  .conclusion-body { font-size:15px; color:#ccc; line-height:1.8; margin-bottom:28px; }
+  .sig { font-family:'Barlow Condensed',sans-serif; font-size:18px; font-weight:700; color:var(--yellow-light); letter-spacing:1px; }
+  .address { font-size:12px; color:var(--muted); margin-top:6px; }
+
+  @media (max-width: 600px) {
+    .pick-grid, .toc-grid, .benefit-grid, .team-grid, .discussion-grid, .equip-grid { grid-template-columns: 1fr; }
+    .hero h1, .land-hero h1 { font-size: 38px; }
+    .section, .toc, .pick-section, .conclusion { padding-left: 20px; padding-right: 20px; }
+    .back-bar { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ LANDING ═══════════════ -->
+<div id="landing">
+  <div class="land-hero">
+    <div class="logo-row">
+      <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text">CORSAIR</div>
+    </div>
+    <h1>MANAGER <span>ONBOARDING</span><br>HUB</h1>
+    <div class="land-sub">Hiring Manager Resource Center</div>
+    <div class="land-desc">Select your new hire's work arrangement to access the right onboarding guide.</div>
+  </div>
+
+  <div class="pick-section">
+    <div class="pick-label">Select a guide to get started</div>
+    <div class="pick-grid">
+      <div class="pick-card" onclick="showBooklet('onsite')">
+        <div class="pick-icon">🏢</div>
+        <div class="pick-title">Onsite New Hire</div>
+        <div class="pick-desc">For new hires reporting to a CORSAIR office. Includes desk setup, office orientation, and in-person onboarding activities.</div>
+        <div class="pick-btn">Open Guide ↗</div>
+      </div>
+      <div class="pick-card" onclick="showBooklet('remote')">
+        <div class="pick-icon">🏠</div>
+        <div class="pick-title">Remote New Hire</div>
+        <div class="pick-desc">For new hires working from home. Includes equipment shipping, home office setup, and remote engagement strategies.</div>
+        <div class="pick-btn">Open Guide ↗</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ONSITE BOOKLET ═══════════════ -->
+<div class="booklet" id="booklet-onsite">
+  <div class="back-bar">
+    <button class="back-btn" onclick="showLanding()">← Back to Hub</button>
+    <span class="back-bar-label">Onsite New Hire Guide</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-logo">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text">CORSAIR</div>
+    </div>
+    <h1>ONBOARDING<br><span>PROGRAM</span><br>GUIDE</h1>
+    <div class="hero-sub">For Managers &nbsp;·&nbsp; Onsite New Hire &nbsp;·&nbsp; Milpitas, CA</div>
+  </div>
+
+  <div class="toc">
+    <div class="section-label">Contents</div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">↓ Click any section to jump directly to it</p>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">Click any section below to jump directly to it.</p>
+    <div class="toc-grid">
+      <a href="#o-intro" class="toc-item"><div class="toc-num">01</div><div class="toc-title">Introduction</div><div class="toc-arrow">↓</div></a>
+      <a href="#o-team" class="toc-item"><div class="toc-num">02</div><div class="toc-title">The Onboarding Team</div><div class="toc-arrow">↓</div></a>
+      <a href="#o-guide" class="toc-item"><div class="toc-num">03</div><div class="toc-title">Program Guide & Pre-Hire</div><div class="toc-arrow">↓</div></a>
+      <a href="#o-week1" class="toc-item"><div class="toc-num">04</div><div class="toc-title">Week 1 Onboarding</div><div class="toc-arrow">↓</div></a>
+      <a href="#o-week2" class="toc-item"><div class="toc-num">05</div><div class="toc-title">Week 2 & Beyond</div><div class="toc-arrow">↓</div></a>
+      <a href="#o-conclusion" class="toc-item"><div class="toc-num">06</div><div class="toc-title">Conclusion</div><div class="toc-arrow">↓</div></a>
+    </div>
+  </div>
+
+  <div class="section" id="o-intro">
+    <div class="section-label">01 — Introduction</div>
+    <div class="section-heading">Why <span class="accent">Onboarding</span> Matters</div>
+    <div class="divider"></div>
+    <p>This guide gives you an overview of the Onboarding Program, describes your role, and provides support materials to make your job easier. Your commitment to this program is what will make it successful.</p>
+    <p>Proper engagement of a new hire in the first 90 days of employment offers three key advantages:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Morale</div><div class="benefit-desc">New hires develop positive impressions of their work environment, company, and peers.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Retention</div><div class="benefit-desc">Employees feel more secure in their role and are less likely to question joining the team.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Productivity</div><div class="benefit-desc">New hires learn and perform their duties more quickly, reducing time to competency.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="o-team">
+    <div class="section-label">02 — The Onboarding Team</div>
+    <div class="section-heading">Who's <span class="accent">Involved</span></div>
+    <div class="divider"></div>
+    <p>The onboarding team is a group of people committed to helping your new hire succeed at CORSAIR.</p>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-badge">You</div><div class="team-name">Manager</div><div class="team-desc">Define the role, make connections, and prepare the department for a smooth arrival.</div></div>
+      <div class="team-card"><div class="team-badge">HR</div><div class="team-name">HR Representative</div><div class="team-desc">Works with the new hire on preboarding forms, orientation, and ensuring all resources are in place.</div></div>
+      <div class="team-card">
+        <div class="team-badge">Mentor</div><div class="team-name">Mentor</div>
+        <div class="team-desc">Primary day-to-day guide throughout the onboarding journey.</div>
+        <div class="mentor-criteria">
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Knowledgeable on CORSAIR procedures</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> 1+ year tenure, good performance record</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Skilled in the new hire's responsibilities</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Supportive and encouraging</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="o-guide">
+    <div class="section-label">03 — Program Guide</div>
+    <div class="section-heading">Three <span class="accent">Phases</span></div>
+    <div class="divider"></div>
+    <p>The Onboarding Program is structured around three key phases, each with defined responsibilities and goals.</p>
+    <div class="phase-timeline">
+      <div class="phase-row">
+        <div class="phase-connector"><div class="phase-dot"></div><div class="phase-line"></div></div>
+        <div class="phase-content">
+          <div class="phase-title">Pre-Hire</div>
+          <div class="phase-timing">Prior to Start Date</div>
+          <ul class="checklist">
+            <li>
+              <span class="resp-badge badge-mgr">Mgr</span>
+              <div class="checklist-text">
+                Submit IT New Hire Form via the IT Department's Portal
+                <a href="https://help.desk.corsair.com/servicedesk/customer/portals" class="portal-link" target="_blank">Help Center — Jira Service Management ↗</a>
+              </div>
+            </li>
+            <li>
+              <span class="resp-badge badge-mgr">Mgr</span>
+              <div class="checklist-text">
+                Submit Mentor Form
+                <a href="https://forms.office.com/pages/responsepage.aspx?id=MgxeQp3kq0mlHvcykb-7bvWYXbZ1R3xKspXFXY2vNlVUNTBHSEJKN1lZM1RFNUlCTE9aODdIUkVWTi4u&route=shorturl" class="portal-link" target="_blank">Mentor Form — Microsoft Forms ↗</a>
+              </div>
+            </li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Contact new hire by email or phone to welcome them</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Identify key stakeholders new hire should meet</div></li>
+            <li><span class="resp-badge badge-hr">HR</span><div class="checklist-text">Contact new hire and collect preboarding forms</div></li>
+            <li><span class="resp-badge badge-hr">HR</span><div class="checklist-text">Schedule New Hire Orientation Meeting</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-connector"><div class="phase-dot"></div><div class="phase-line"></div></div>
+        <div class="phase-content">
+          <div class="phase-title">Week 1</div>
+          <div class="phase-timing">New Hire's First Week</div>
+          <ul class="checklist">
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Welcome new hire — spend at least 30 min/day together</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Take new hire to lunch on Day 1</div></li>
+            <li><span class="resp-badge badge-hr">HR</span><div class="checklist-text">Conduct New Hire Orientation and Office Tour</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-connector"><div class="phase-dot"></div></div>
+        <div class="phase-content">
+          <div class="phase-title">Week 2 & Beyond</div>
+          <div class="phase-timing">Ongoing through 90 Days</div>
+          <ul class="checklist">
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Schedule stakeholder introduction meetings</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Conduct project and department overview</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Regular check-ins (monthly minimum through day 90)</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="o-week1">
+    <div class="section-label">04 — Week 1 Onboarding</div>
+    <div class="section-heading">Day <span class="accent">One</span> Priorities</div>
+    <div class="divider"></div>
+    <p>After orientation, help your new hire get familiar with their immediate work environment. A strong first day sets the tone for their entire experience.</p>
+    <div class="callout"><strong>Daily touch point required.</strong> Plan to spend at least 30 minutes each day with your new hire during their first week. This is one of the most impactful things you can do.</div>
+    <div class="orient-list">
+      <div class="orient-item"><div class="orient-num">01</div> Show them their desk and workstation setup</div>
+      <div class="orient-item"><div class="orient-num">02</div> Introduce the location of team members and adjacent teams</div>
+      <div class="orient-item"><div class="orient-num">03</div> Walk through conference room locations and reservation process</div>
+      <div class="orient-item"><div class="orient-num">04</div> Point out restrooms, cafeteria, break room, gym, and exits</div>
+      <div class="orient-item"><div class="orient-num">05</div> Take them to lunch — keep it relaxed and welcoming</div>
+    </div>
+  </div>
+
+  <div class="section" id="o-week2">
+    <div class="section-label">05 — Week 2 & Beyond</div>
+    <div class="section-heading">Building <span class="accent">Momentum</span></div>
+    <div class="divider"></div>
+    <p>Schedule a structured department overview and begin stakeholder introductions. Work with the mentor to maintain daily engagement.</p>
+    <div class="discussion-grid">
+      <div class="disc-item"><span class="disc-arrow">▸</span> CORSAIR org structure and your department's role</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Department structure, active projects, and business impact</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> How to schedule meetings in Outlook/Teams</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> How to set up calendar reminders and OOO messages</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Confirm daily check-ins with mentor are happening</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Check in on questions, blockers, and overall progress</div>
+    </div>
+    <div class="callout" style="margin-top:24px;"><strong>Check-in cadence:</strong> Conduct manager check-ins monthly at minimum through Day 90.</div>
+  </div>
+
+  <div class="conclusion" id="o-conclusion">
+    <div class="section-label">06 — Conclusion</div>
+    <div class="section-heading" style="color:#fff;">Thank <span class="accent">You</span></div>
+    <div class="divider"></div>
+    <p class="conclusion-body">Thank you for all you do to ensure your new hire learns everything they can about CORSAIR — our culture, our business, and the remarkable impact we have on our customers.</p>
+    <div class="sig">— The CORSAIR HR Team</div>
+    <div class="address">115 N McCarthy Blvd, Milpitas, CA 95035</div>
+  </div>
+</div>
+
+<!-- ═══════════════ REMOTE BOOKLET ═══════════════ -->
+<div class="booklet" id="booklet-remote">
+  <div class="back-bar">
+    <button class="back-btn" onclick="showLanding()">← Back to Hub</button>
+    <span class="back-bar-label">Remote New Hire Guide</span>
+  </div>
+
+  <div class="hero">
+    <div class="hero-logo">
+      <svg width="34" height="34" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text">CORSAIR</div>
+    </div>
+    <h1>ONBOARDING<br><span>REMOTE</span><br>NEW HIRE GUIDE</h1>
+    <div class="hero-sub">For Managers &nbsp;·&nbsp; Remote New Hire &nbsp;·&nbsp; Milpitas, CA</div>
+  </div>
+
+  <div class="toc">
+    <div class="section-label">Contents</div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">↓ Click any section to jump directly to it</p>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">Click any section below to jump directly to it.</p>
+    <div class="toc-grid">
+      <a href="#r-intro" class="toc-item"><div class="toc-num">01</div><div class="toc-title">Introduction</div><div class="toc-arrow">↓</div></a>
+      <a href="#r-team" class="toc-item"><div class="toc-num">02</div><div class="toc-title">The Onboarding Team</div><div class="toc-arrow">↓</div></a>
+      <a href="#r-guide" class="toc-item"><div class="toc-num">03</div><div class="toc-title">Pre-Hire Considerations</div><div class="toc-arrow">↓</div></a>
+      <a href="#r-week1" class="toc-item"><div class="toc-num">04</div><div class="toc-title">Week 1 & Beyond</div><div class="toc-arrow">↓</div></a>
+      <a href="#r-equip" class="toc-item"><div class="toc-num">05</div><div class="toc-title">Equipment & Home Office</div><div class="toc-arrow">↓</div></a>
+      <a href="#r-conclusion" class="toc-item"><div class="toc-num">06</div><div class="toc-title">Conclusion</div><div class="toc-arrow">↓</div></a>
+    </div>
+  </div>
+
+  <div class="section" id="r-intro">
+    <div class="section-label">01 — Introduction</div>
+    <div class="section-heading">Remote <span class="accent">Onboarding</span> Considerations</div>
+    <div class="divider"></div>
+    <p>This guide provides considerations for onboarding Remote New Hires, whose activities may differ from those of an onsite new hire. The information is guidance only and should be applied as appropriate to meet business needs.</p>
+    <p>This guide may be used by HR Representatives, Managers, and Mentors, and is organized around two key phases:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Pre-Hire</div><div class="benefit-desc">Administrative tasks before the start date, with additional steps specific to remote workers.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Week 1+</div><div class="benefit-desc">Activities spanning the full employment phase, with strategies to keep remote hires engaged.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Remote First</div><div class="benefit-desc">Working from home can be isolating — intentional connection strategies make a big difference.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="r-team">
+    <div class="section-label">02 — The Onboarding Team</div>
+    <div class="section-heading">Who's <span class="accent">Involved</span></div>
+    <div class="divider"></div>
+    <p>The onboarding team is a group of people committed to helping your remote new hire succeed at CORSAIR.</p>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-badge">You</div><div class="team-name">Manager</div><div class="team-desc">Define the role, make connections, and ensure the remote new hire feels part of the team from day one.</div></div>
+      <div class="team-card"><div class="team-badge">HR</div><div class="team-name">HR Representative</div><div class="team-desc">Works with the new hire on preboarding forms, orientation, and ensuring all resources are in place.</div></div>
+      <div class="team-card">
+        <div class="team-badge">Mentor</div><div class="team-name">Mentor</div>
+        <div class="team-desc">Primary day-to-day remote guide throughout the onboarding journey.</div>
+        <div class="mentor-criteria">
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Knowledgeable on CORSAIR procedures</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> 1+ year tenure, good performance record</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Skilled in the new hire's responsibilities</div>
+          <div class="criteria-item"><span class="criteria-dot">▸</span> Supportive and encouraging</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="r-guide">
+    <div class="section-label">03 — Pre-Hire Considerations</div>
+    <div class="section-heading">Before <span class="accent">Day One</span></div>
+    <div class="divider"></div>
+    <p>Consider how the Remote New Hire will start at CORSAIR and how onboarding will be implemented. Plan accordingly by answering key questions upfront.</p>
+    <div class="callout"><strong>Key questions to answer:</strong> Will the remote worker need equipment shipped to their home? What system software will they require access to?</div>
+    <div class="phase-timeline">
+      <div class="phase-row">
+        <div class="phase-connector"><div class="phase-dot"></div><div class="phase-line"></div></div>
+        <div class="phase-content">
+          <div class="phase-title">Pre-Hire</div>
+          <div class="phase-timing">Prior to Start Date</div>
+          <ul class="checklist">
+            <li>
+              <span class="resp-badge badge-mgr">Mgr</span>
+              <div class="checklist-text">
+                Submit IT New Hire Form via the IT Department's Portal
+                <a href="https://help.desk.corsair.com/servicedesk/customer/portals" class="portal-link" target="_blank">Help Center — Jira Service Management ↗</a>
+              </div>
+            </li>
+            <li>
+              <span class="resp-badge badge-mgr">Mgr</span>
+              <div class="checklist-text">
+                Submit Mentor Form
+                <a href="https://forms.office.com/pages/responsepage.aspx?id=MgxeQp3kq0mlHvcykb-7bvWYXbZ1R3xKspXFXY2vNlVUNTBHSEJKN1lZM1RFNUlCTE9aODdIUkVWTi4u&route=shorturl" class="portal-link" target="_blank">Mentor Form — Microsoft Forms ↗</a>
+              </div>
+            </li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Confirm equipment shipping to new hire's home address</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Contact new hire by email or phone to welcome them</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Identify key stakeholders new hire should meet virtually</div></li>
+            <li><span class="resp-badge badge-hr">HR</span><div class="checklist-text">Contact new hire and collect preboarding forms</div></li>
+            <li><span class="resp-badge badge-hr">HR</span><div class="checklist-text">Schedule New Hire Orientation Meeting (virtual)</div></li>
+          </ul>
+        </div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-connector"><div class="phase-dot"></div></div>
+        <div class="phase-content">
+          <div class="phase-title">Week 2 & Beyond</div>
+          <div class="phase-timing">Ongoing through 90 Days</div>
+          <ul class="checklist">
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Schedule virtual stakeholder introduction meetings</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Conduct virtual project and department overview</div></li>
+            <li><span class="resp-badge badge-mgr">Mgr</span><div class="checklist-text">Regular check-ins (monthly minimum through day 90)</div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="r-week1">
+    <div class="section-label">04 — Week 1 & Beyond</div>
+    <div class="section-heading">Remote <span class="accent">Engagement</span> Strategies</div>
+    <div class="divider"></div>
+    <p>Onboarding activities during the first week should involve a variety of personnel to give the remote new hire as many connections as possible. Consider having people beyond the mentor take part — such as showing them different systems and software.</p>
+    <div class="discussion-grid">
+      <div class="disc-item"><span class="disc-arrow">▸</span> Involve multiple people in Week 1 — not just the mentor</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Review travel policy and how to submit expenses early on</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Arrange participation in stakeholder meetings where possible</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Establish team communication norms and webcam expectations</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Discuss schedule coverage and email/voicemail check frequency</div>
+      <div class="disc-item"><span class="disc-arrow">▸</span> Remote employees may visit the worksite for key meetings</div>
+    </div>
+    <div class="callout" style="margin-top:24px;"><strong>Daily touch point required.</strong> Plan to spend at least 30 minutes each day with your new hire during their first week — virtually via Teams or a call.</div>
+  </div>
+
+  <div class="section" id="r-equip">
+    <div class="section-label">05 — Equipment & Home Office</div>
+    <div class="section-heading">Getting <span class="accent">Set Up</span></div>
+    <div class="divider"></div>
+    <p>All equipment will be sent to the remote new hire's home to arrive during their second week of employment. Time must be allotted for home office setup that week.</p>
+    <div class="equip-grid">
+      <div class="equip-card"><div class="equip-icon">💻</div><div><div class="equip-name">Laptop</div><div class="equip-note">Provided standard</div></div></div>
+      <div class="equip-card"><div class="equip-icon">🖥️</div><div><div class="equip-name">Monitor</div><div class="equip-note">Provided standard</div></div></div>
+      <div class="equip-card"><div class="equip-icon">⌨️</div><div><div class="equip-name">Mouse, Keyboard & Headset</div><div class="equip-note">Charged to department</div></div></div>
+      <div class="equip-card"><div class="equip-icon">🎁</div><div><div class="equip-name">HR Onboarding Welcome Gift</div><div class="equip-note">Included in shipment</div></div></div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-title">Home Office Requirements</div>
+      <ul class="info-list">
+        <li><span class="info-dot">▸</span> Must designate a distraction-free, technology-enabled workspace</li>
+        <li><span class="info-dot">▸</span> If dependents at home require care, arrangements must be in place</li>
+        <li><span class="info-dot">▸</span> Additional equipment requires manager approval; charged to department</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="conclusion" id="r-conclusion">
+    <div class="section-label">06 — Conclusion</div>
+    <div class="section-heading" style="color:#fff;">Thank <span class="accent">You</span></div>
+    <div class="divider"></div>
+    <p class="conclusion-body">Thank you for all you do to ensure your remote new hire learns everything they can about CORSAIR — our culture, our business, and the remarkable impact we have on our customers. Manager check-ins should be conducted monthly at a minimum after Week 2 through 90 days.</p>
+    <div class="sig">— The CORSAIR HR Team</div>
+    <div class="address">115 N McCarthy Blvd, Milpitas, CA 95035</div>
+  </div>
+</div>
+
+<script>
+  function showBooklet(type) {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('booklet-onsite').classList.remove('active');
+    document.getElementById('booklet-remote').classList.remove('active');
+    document.getElementById('booklet-' + type).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function showLanding() {
+    document.getElementById('landing').style.display = 'flex';
+    document.getElementById('booklet-onsite').classList.remove('active');
+    document.getElementById('booklet-remote').classList.remove('active');
+    window.scrollTo(0, 0);
+  }
+  function openLink(url) {
+    try { window.open(url, '_blank', 'noopener,noreferrer'); }
+    catch(e) { window.location.href = url; }
+  }
+  function openInBrowser() {}
+  // Convert all portal-links to use JS onclick instead of href for Teams compatibility
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a.portal-link').forEach(function(a) {
+      var url = a.getAttribute('href');
+      a.removeAttribute('href');
+      a.style.cursor = 'pointer';
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        openLink(url);
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
