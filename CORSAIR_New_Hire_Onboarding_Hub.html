@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CORSAIR New Hire Onboarding Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --yellow:#C49010;--yellow-light:#F5C842;--yellow-bg:#FFFBF0;--yellow-border:#E8C84A;
+  --dark:#1a1a1a;--card:#F8F7F4;--text:#1a1a1a;--muted:#666;--border:#E0DDD5;
+}
+html{scroll-behavior:smooth;}
+body{background:#fff;color:var(--text);font-family:'Barlow',sans-serif;font-size:15px;line-height:1.7;}
+.page{max-width:820px;margin:0 auto;padding:0 0 60px;}
+
+/* LANDING */
+#landing{min-height:100vh;display:flex;flex-direction:column;background:#fff;}
+.land-hero{background:linear-gradient(160deg,#1a1a1a 0%,#2a2000 60%,#1a1a1a 100%);padding:56px 40px 48px;position:relative;overflow:hidden;text-align:center;border-bottom:3px solid var(--yellow-light);}
+.land-hero::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(212,160,23,0.1) 0%,transparent 70%);pointer-events:none;}
+.logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:28px;}
+.logo-text{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:800;letter-spacing:3px;color:#fff;}
+.land-hero h1{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;line-height:1.0;color:#fff;margin-bottom:10px;}
+.land-hero h1 span{color:var(--yellow-light);}
+.land-sub{font-size:13px;color:#aaa;letter-spacing:2px;text-transform:uppercase;}
+.land-desc{font-size:15px;color:#bbb;margin-top:12px;}
+
+.pick-section{padding:48px 40px 60px;max-width:860px;margin:0 auto;width:100%;}
+.pick-label{font-size:22px;letter-spacing:2px;text-transform:uppercase;color:#1a1a1a;font-weight:800;margin-bottom:28px;text-align:center;}
+.pick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.pick-card{background:#fff;border:1px solid var(--border);border-top:3px solid var(--yellow-light);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color 0.2s,transform 0.15s,box-shadow 0.2s;min-height:220px;}
+.pick-card:hover{border-color:var(--yellow);transform:translateY(-2px);box-shadow:0 4px 20px rgba(0,0,0,0.08);}
+
+.pick-card-body{padding:26px 24px;}
+.pick-title{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--dark);margin-bottom:8px;}
+.pick-desc{font-size:16px;color:#555;line-height:1.6;margin-bottom:18px;}
+.pick-btn{display:inline-block;font-size:13px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;background:var(--dark);border-radius:5px;padding:10px 22px;transition:background 0.2s;}
+.pick-card:hover .pick-btn{background:var(--yellow);color:var(--dark);}
+
+/* BOOKLETS */
+.booklet{max-width:820px;margin:0 auto;padding:0 0 80px;display:none;}
+.booklet.active{display:block;}
+.back-bar{background:var(--dark);border-bottom:3px solid var(--yellow-light);padding:12px 40px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#fff;cursor:pointer;background:none;border:none;padding:6px 0;font-family:'Barlow',sans-serif;transition:color 0.2s;}
+.back-btn:hover{color:var(--yellow-light);}
+.back-bar-label{font-size:12px;color:#aaa;letter-spacing:1px;}
+
+.hero{background:linear-gradient(160deg,#1a1a1a 0%,#2a2000 60%,#1a1a1a 100%);padding:48px 40px 40px;position:relative;overflow:hidden;}
+.hero-logo{display:flex;align-items:center;gap:8px;margin-bottom:24px;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:48px;font-weight:800;line-height:1.0;color:#fff;margin-bottom:10px;}
+.hero h1 span{color:var(--yellow-light);}
+.hero-sub{font-size:13px;color:#999;letter-spacing:2px;text-transform:uppercase;}
+.hero-tag{display:inline-block;background:var(--yellow-light);color:#111;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 10px;border-radius:4px;margin-bottom:12px;}
+
+.toc{padding:32px 40px;border-bottom:1px solid var(--border);background:#FAFAF8;}
+.section-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--dark);font-weight:700;margin-bottom:16px;}
+.toc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.toc-item{display:flex;align-items:center;gap:14px;padding:16px 18px;background:#fff;border:1px solid var(--border);border-left:4px solid var(--yellow-light);border-radius:8px;cursor:pointer;text-decoration:none;transition:border-color 0.2s,background 0.2s,box-shadow 0.2s;}
+.toc-item:hover{border-color:var(--yellow);border-left-color:var(--yellow);background:var(--yellow-bg);box-shadow:0 2px 8px rgba(0,0,0,0.07);}
+.toc-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:800;color:var(--dark);line-height:1;min-width:34px;}
+.toc-title{font-size:16px;font-weight:700;color:var(--dark);} .toc-item:hover .toc-title{color:var(--yellow);text-decoration:underline;}
+.toc-arrow{margin-left:auto;color:var(--yellow);opacity:1;font-size:15px;font-weight:700;transition:opacity 0.2s,transform 0.2s;}
+.toc-item:hover .toc-arrow{opacity:1;transform:translateX(4px);}
+
+.section{padding:40px 40px;border-bottom:1px solid #E8E5DE;background:#fff;scroll-margin-top:60px;}
+.section-heading{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:#1a1a1a;margin-bottom:4px;}
+.section-heading .accent{color:var(--yellow);}
+.divider{width:44px;height:3px;background:var(--yellow-light);border-radius:2px;margin:10px 0 20px;}
+p{color:#444;margin-bottom:14px;font-size:15px;}
+p:last-child{margin-bottom:0;}
+
+.benefit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;}
+.benefit-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 16px;border-top:3px solid var(--yellow-light);}
+.benefit-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#1a1a1a;margin-bottom:6px;}
+.benefit-desc{font-size:16px;color:#555;line-height:1.5;margin:0;}
+
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;}
+.team-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 16px;}
+.team-badge{display:inline-block;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:#fff;background:#1a1a1a;padding:3px 8px;border-radius:3px;margin-bottom:10px;}
+.team-name{font-size:18px;font-weight:600;color:#1a1a1a;margin-bottom:8px;}
+.team-desc{font-size:16px;color:#555;line-height:1.5;margin:0;}
+.team-bullets{margin-top:10px;padding-top:8px;border-top:1px solid var(--border);}
+.team-bullet{display:flex;gap:7px;font-size:15px;color:#666;margin-bottom:5px;line-height:1.4;}
+.bullet-dot{color:var(--yellow);flex-shrink:0;}
+
+.contact-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:16px;}
+.contact-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:12px;}
+.contact-icon{font-size:20px;flex-shrink:0;}
+.contact-name{font-size:15px;font-weight:600;color:#1a1a1a;}
+.contact-email{font-size:13px;color:#C49010;font-style:normal;display:block;margin-top:3px;font-weight:500;text-decoration:none;}.contact-email:hover{text-decoration:underline;}
+
+.action-table{width:100%;border-collapse:collapse;margin-top:16px;font-size:15px;}
+.action-table th{background:#1a1a1a;color:#fff;padding:10px 14px;text-align:left;font-size:12px;letter-spacing:1px;text-transform:uppercase;font-weight:600;}
+.action-table td{padding:10px 14px;border-bottom:1px solid var(--border);color:#333;vertical-align:top;}
+.action-table tr:last-child td{border-bottom:none;}
+.action-table tr:nth-child(even) td{background:#FAFAF8;}
+.resp-badge{font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:700;padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.badge-hr{background:#E8F0FE;color:#1a56db;border:1px solid #B4CCFA;}
+.badge-mgr{background:#FDF0D0;color:#A07010;border:1px solid var(--yellow-border);}
+.badge-payroll{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;}
+.badge-it{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8;}
+
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;}
+.info-card-title{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#1a1a1a;margin-bottom:10px;}
+.info-item{display:flex;gap:8px;font-size:16px;color:#444;padding:4px 0;border-bottom:1px solid #EEECE6;line-height:1.5;}
+.info-item:last-child{border-bottom:none;}
+.info-dot{color:var(--yellow);flex-shrink:0;}
+
+.callout{background:var(--yellow-bg);border:1px solid var(--yellow-border);border-left:3px solid var(--yellow-light);border-radius:0 8px 8px 0;padding:14px 18px;margin:20px 0;font-size:14px;color:#555;}
+.callout strong{color:#A07010;}
+
+.portal-link{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:var(--yellow);text-decoration:none;background:var(--yellow-bg);border:1px solid var(--yellow-border);border-radius:3px;padding:2px 9px;width:fit-content;transition:background 0.2s;}
+.portal-link:hover{background:#FFF3CC;}
+
+.bonus-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.bonus-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;}
+.bonus-amount{font-family:'Barlow Condensed',sans-serif;font-size:32px;font-weight:800;color:var(--yellow);margin-bottom:4px;}
+.bonus-label{font-size:15px;color:#666;}
+
+.conclusion{padding:40px 40px;background:#1a1a1a;}
+.conclusion .section-label{color:var(--yellow);}
+.conclusion .section-heading{color:#fff;}
+.conclusion .divider{background:var(--yellow-light);}
+.conclusion-body{font-size:15px;color:#ccc;line-height:1.8;margin-bottom:22px;}
+.sig{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--yellow-light);letter-spacing:1px;}
+.address{font-size:12px;color:#666;margin-top:5px;}
+
+@media(max-width:600px){
+  .pick-grid,.toc-grid,.benefit-grid,.team-grid,.contact-grid,.info-grid,.bonus-grid{grid-template-columns:1fr;}
+  .section,.toc,.pick-section,.conclusion,.back-bar{padding-left:20px;padding-right:20px;}
+  .hero{padding:32px 20px;}
+  .hero h1{font-size:36px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LANDING -->
+<div id="landing">
+  <div class="land-hero">
+    <div class="logo-row">
+      <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text">CORSAIR</div>
+    </div>
+    <h1>WELCOME TO<br><span>CORSAIR!</span></h1>
+    <div class="land-sub">New Hire Onboarding Hub</div>
+    <div class="land-desc">Select your guide below to get started.</div>
+  </div>
+  <div class="pick-section">
+    <div class="pick-label">Select your onboarding guide</div>
+    <div class="pick-grid">
+      <div class="pick-card" onclick="showBooklet('onsite')">
+        <div class="pick-card-body">
+          <div class="pick-title">CORSAIR Onsite</div>
+          <div class="pick-desc">For new hires working at the CORSAIR Milpitas office.</div>
+          <div class="pick-btn">Open Guide ↗</div>
+        </div>
+      </div>
+      <div class="pick-card" onclick="showBooklet('remote')">
+        <div class="pick-card-body">
+          <div class="pick-title">CORSAIR Remote</div>
+          <div class="pick-desc">For new hires working remotely from home.</div>
+          <div class="pick-btn">Open Guide ↗</div>
+        </div>
+      </div>
+      <div class="pick-card" onclick="showBooklet('scuf')">
+        <div class="pick-card-body">
+          <div class="pick-title">SCUF / ORIGIN PC</div>
+          <div class="pick-desc">For new hires joining SCUF Gaming or ORIGIN PC.</div>
+          <div class="pick-btn">Open Guide ↗</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ONSITE BOOKLET -->
+<div class="booklet" id="booklet-onsite">
+  <div class="back-bar">
+    <button class="back-btn" onclick="showLanding()">← Back to Hub</button>
+    <span class="back-bar-label">CORSAIR Onsite New Hire Guide</span>
+  </div>
+  <div class="hero">
+    <div class="hero-logo">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:3px;color:#fff;">CORSAIR</div>
+    </div>
+    <div class="hero-tag">Onsite New Hire</div>
+    <h1>ONBOARDING<br><span>PROGRAM</span><br>NEW HIRES</h1>
+    <div class="hero-sub">115 N McCarthy Blvd, Milpitas, CA 95035</div>
+  </div>
+
+  <div class="toc">
+    <div class="section-label">Contents</div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">↓ Click any section to jump directly to it</p>
+    <div class="toc-grid">
+      <a href="#on-welcome" class="toc-item"><div class="toc-num">01</div><div class="toc-title">Welcome to CORSAIR</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-significance" class="toc-item"><div class="toc-num">02</div><div class="toc-title">Significance of Onboarding</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-team" class="toc-item"><div class="toc-num">03</div><div class="toc-title">The Onboarding Team</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-week1" class="toc-item"><div class="toc-num">04</div><div class="toc-title">Week 1 Activities</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-systems" class="toc-item"><div class="toc-num">05</div><div class="toc-title">Systems & Trainings</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-week2" class="toc-item"><div class="toc-num">06</div><div class="toc-title">Week 2 & Beyond</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-additional" class="toc-item"><div class="toc-num">07</div><div class="toc-title">Additional Information</div><div class="toc-arrow">↓</div></a>
+      <a href="#on-referral" class="toc-item"><div class="toc-num">08</div><div class="toc-title">Employee Programs</div><div class="toc-arrow">↓</div></a>
+    </div>
+  </div>
+
+  <div class="section" id="on-welcome">
+    <div class="section-label">01 — Welcome</div>
+    <div class="section-heading">Welcome to <span class="accent">CORSAIR!</span></div>
+    <div class="divider"></div>
+    <p>Welcome to the Onboarding Program for new hires. We're very excited to have you join us! This guide is designed to give you an overview of the Onboarding Program, describe the role you play, and provide assistance with support materials to make your transition go well.</p>
+    <p style="color:#888;font-style:italic;">— The CORSAIR Team</p>
+    <div class="callout">
+      <strong>Message from the Chief People and Consumer Experience Officer</strong><br>
+      We are thrilled to have you join our team at CORSAIR. Everyone on our team plays an important role. We hope you find your experience with us inspiring and rewarding. We're excited to work with you and see what great things we can accomplish together!<br><br>
+      <span style="color:#A07010;font-weight:600;">— Pete Hilliard</span>
+    </div>
+  </div>
+
+  <div class="section" id="on-significance">
+    <div class="section-label">02 — Significance of Onboarding</div>
+    <div class="section-heading">Why <span class="accent">Onboarding</span> Matters</div>
+    <div class="divider"></div>
+    <p>The first 90 days are critical to your success at CORSAIR. A structured onboarding process helps you:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Get Oriented</div><div class="benefit-desc">Learn about CORSAIR's culture, operations, and your role within the organization.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Build Connections</div><div class="benefit-desc">Meet your teammates, mentors, and leaders who will support your growth.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Accelerate Success</div><div class="benefit-desc">Quickly develop competency in your role and contribute meaningful work.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="on-team">
+    <div class="section-label">03 — The Onboarding Team</div>
+    <div class="section-heading">Your <span class="accent">Support</span> System</div>
+    <div class="divider"></div>
+    <p>You're not going through this alone. Meet the people who will help you succeed:</p>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-badge">Manager</div><div class="team-name">Your Manager</div><div class="team-desc">Your primary resource for role clarity, expectations, and career development.</div></div>
+      <div class="team-card"><div class="team-badge">Mentor</div><div class="team-name">Your Mentor</div><div class="team-desc">Your day-to-day guide who knows the systems, processes, and people you need to know.</div></div>
+      <div class="team-card"><div class="team-badge">HR</div><div class="team-name">HR Representative</div><div class="team-desc">Your resource for benefits, policies, and company programs.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="on-week1">
+    <div class="section-label">04 — Week 1 Activities</div>
+    <div class="section-heading">Your First <span class="accent">Week</span></div>
+    <div class="divider"></div>
+    <p>Expect to participate in orientation, meet your team, and begin learning your role. Make the most of it:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Orientation</div><div class="benefit-desc">Company overview, benefits enrollment, facilities tour, and IT setup.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Meet Your Team</div><div class="benefit-desc">Introductions to direct reports, peers, and cross-functional partners.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Role Overview</div><div class="benefit-desc">Understand expectations, priorities, and initial projects you'll work on.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="on-systems">
+    <div class="section-label">05 — Systems & Trainings</div>
+    <div class="section-heading">Getting <span class="accent">Equipped</span></div>
+    <div class="divider"></div>
+    <p>You'll receive access to systems and training to help you succeed:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Systems You'll Use</div>
+        <div class="info-item"><span class="info-dot">▸</span> Microsoft Office 365</div>
+        <div class="info-item"><span class="info-dot">▸</span> Slack (Internal Communication)</div>
+        <div class="info-item"><span class="info-dot">▸</span> Jira (Project Management)</div>
+        <div class="info-item"><span class="info-dot">▸</span> Salesforce (Sales Systems)</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Required Trainings</div>
+        <div class="info-item"><span class="info-dot">▸</span> Compliance & Safety</div>
+        <div class="info-item"><span class="info-dot">▸</span> Data Security</div>
+        <div class="info-item"><span class="info-dot">▸</span> Company Values</div>
+        <div class="info-item"><span class="info-dot">▸</span> Role-Specific Training</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="on-week2">
+    <div class="section-label">06 — Week 2 & Beyond</div>
+    <div class="section-heading">Settling <span class="accent">In</span></div>
+    <div class="divider"></div>
+    <p>As you move beyond your first week, continue building relationships and deepening your understanding of CORSAIR:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">30-Day Check-in</div><div class="benefit-desc">Meet with your manager to discuss progress, questions, and any concerns.</div></div>
+      <div class="benefit-card"><div class="benefit-title">60-Day Review</div><div class="benefit-desc">Assess your ramp-up, identify areas for continued learning and development.</div></div>
+      <div class="benefit-card"><div class="benefit-title">90-Day Assessment</div><div class="benefit-desc">Comprehensive review of your first 90 days and next steps in your career.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="on-additional">
+    <div class="section-label">07 — Additional Information</div>
+    <div class="section-heading">Resources &amp; <span class="accent">Support</span></div>
+    <div class="divider"></div>
+    <p>Additional resources to support your onboarding journey:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Quick Links</div>
+        <div class="info-item"><span class="info-dot">▸</span> Employee Handbook</div>
+        <div class="info-item"><span class="info-dot">▸</span> Benefits Guide</div>
+        <div class="info-item"><span class="info-dot">▸</span> Org Chart</div>
+        <div class="info-item"><span class="info-dot">▸</span> Learning Portal</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Contact Information</div>
+        <div class="info-item"><span class="info-dot">▸</span> HR: hr@corsair.com</div>
+        <div class="info-item"><span class="info-dot">▸</span> IT Support: itsupport@corsair.com</div>
+        <div class="info-item"><span class="info-dot">▸</span> Your Manager</div>
+        <div class="info-item"><span class="info-dot">▸</span> Your Mentor</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="on-referral">
+    <div class="section-label">08 — Employee Programs</div>
+    <div class="section-heading">Referral &amp; <span class="accent">Rewards</span></div>
+    <div class="divider"></div>
+    <p>Help us grow by referring talented people to CORSAIR. It's a great way to share the CORSAIR opportunity with your network:</p>
+    <div class="bonus-grid">
+      <div class="bonus-card">
+        <div class="bonus-amount">$2,500</div>
+        <div class="bonus-label">Standard Referral Bonus</div>
+      </div>
+      <div class="bonus-card">
+        <div class="bonus-amount">Up to $5,000</div>
+        <div class="bonus-label">Executive / Specialized Roles</div>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:24px;">
+      <strong>Interested in referring someone?</strong> Visit the Careers portal or speak with your HR representative for information on the referral process and program details.
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <div class="section-label">Congratulations</div>
+    <div class="section-heading" style="color:#fff;">Welcome to the <span class="accent">Team</span></div>
+    <div class="divider"></div>
+    <p class="conclusion-body">We're excited to have you as part of the CORSAIR team. Your unique skills, perspectives, and passion will contribute to our continued success. Take advantage of your onboarding resources, connect with your team, and don't hesitate to ask questions. We're here to support your success.</p>
+    <div class="sig">Welcome Aboard!</div>
+    <div class="address">115 N McCarthy Blvd, Milpitas, CA 95035 • careers.corsair.com</div>
+  </div>
+</div>
+
+<!-- REMOTE BOOKLET -->
+<div class="booklet" id="booklet-remote">
+  <div class="back-bar">
+    <button class="back-btn" onclick="showLanding()">← Back to Hub</button>
+    <span class="back-bar-label">CORSAIR Remote New Hire Guide</span>
+  </div>
+  <div class="hero">
+    <div class="hero-logo">
+      <svg width="30" height="30" viewBox="0 0 40 40" fill="none">
+        <path d="M20 4 L36 34 L20 28 L4 34 Z" fill="#D4A017" opacity="0.9"/>
+        <path d="M20 4 L36 34 L20 28 Z" fill="#F5C842"/>
+      </svg>
+      <div class="logo-text" style="font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:800;letter-spacing:3px;color:#fff;">CORSAIR</div>
+    </div>
+    <div class="hero-tag">Remote New Hire</div>
+    <h1>REMOTE ONBOARDING<br><span>PROGRAM</span><br>NEW HIRES</h1>
+    <div class="hero-sub">Work from Home • Stay Connected • Thrive</div>
+  </div>
+
+  <div class="toc">
+    <div class="section-label">Contents</div>
+    <p style="font-size:13px;color:#888;margin-bottom:16px;margin-top:-8px;">↓ Click any section to jump directly to it</p>
+    <div class="toc-grid">
+      <a href="#rm-welcome" class="toc-item"><div class="toc-num">01</div><div class="toc-title">Welcome</div><div class="toc-arrow">↓</div></a>
+      <a href="#rm-setup" class="toc-item"><div class="toc-num">02</div><div class="toc-title">Home Office Setup</div><div class="toc-arrow">↓</div></a>
+      <a href="#rm-tech" class="toc-item"><div class="toc-num">03</div><div class="toc-title">Technology & Tools</div><div class="toc-arrow">↓</div></a>
+      <a href="#rm-first" class="toc-item"><div class="toc-num">04</div><div class="toc-title">First Week Tips</div><div class="toc-arrow">↓</div></a>
+      <a href="#rm-connection" class="toc-item"><div class="toc-num">05</div><div class="toc-title">Staying Connected</div><div class="toc-arrow">↓</div></a>
+      <a href="#rm-support" class="toc-item"><div class="toc-num">06</div><div class="toc-title">Support & Resources</div><div class="toc-arrow">↓</div></a>
+    </div>
+  </div>
+
+  <div class="section" id="rm-welcome">
+    <div class="section-label">01 — Welcome</div>
+    <div class="section-heading">Welcome to <span class="accent">Remote CORSAIR</span></div>
+    <div class="divider"></div>
+    <p>Welcome to CORSAIR! Whether working from home is new to you or you're an experienced remote worker, we're here to help you succeed. This guide provides tips and resources specific to remote onboarding.</p>
+    <p>Remote work at CORSAIR means flexibility, autonomy, and the opportunity to be part of a collaborative, global team—all from the comfort of your home.</p>
+  </div>
+
+  <div class="section" id="rm-setup">
+    <div class="section-label">02 — Home Office Setup</div>
+    <div class="section-heading">Creating Your <span class="accent">Workspace</span></div>
+    <div class="divider"></div>
+    <p>A proper home office setup is essential for productivity and comfort:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Equipment Provided</div>
+        <div class="info-item"><span class="info-dot">▸</span> Laptop & Docking Station</div>
+        <div class="info-item"><span class="info-dot">▸</span> Monitor</div>
+        <div class="info-item"><span class="info-dot">▸</span> Keyboard & Mouse</div>
+        <div class="info-item"><span class="info-dot">▸</span> Headset</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Setup Best Practices</div>
+        <div class="info-item"><span class="info-dot">▸</span> Ergonomic desk & chair</div>
+        <div class="info-item"><span class="info-dot">▸</span> Good lighting</div>
+        <div class="info-item"><span class="info-dot">▸</span> Quiet workspace</div>
+        <div class="info-item"><span class="info-dot">▸</span> Stable internet</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="rm-tech">
+    <div class="section-label">03 — Technology & Tools</div>
+    <div class="section-heading">Staying <span class="accent">Connected</span></div>
+    <div class="divider"></div>
+    <p>Familiarize yourself with the tools you'll use daily:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Communication</div><div class="benefit-desc">Slack for messaging, Teams for video calls, and Email for formal communication.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Collaboration</div><div class="benefit-desc">OneDrive for file sharing, Sharepoint for team resources, and Jira for project tracking.</div></div>
+      <div class="benefit-card"><div class="benefit-title">IT Support</div><div class="benefit-desc">IT Help Desk available via email or Slack for technical assistance and troubleshooting.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="rm-first">
+    <div class="section-label">04 — First Week Tips</div>
+    <div class="section-heading">Making the <span class="accent">Most</span> of Week 1</div>
+    <div class="divider"></div>
+    <div class="callout">
+      <strong>Tip:</strong> Treat your first week like you're in an office. Get up early, dress professionally, and maintain regular working hours to establish good routines.
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Do's</div>
+        <div class="info-item"><span class="info-dot">✓</span> Join all scheduled meetings on camera</div>
+        <div class="info-item"><span class="info-dot">✓</span> Take detailed notes</div>
+        <div class="info-item"><span class="info-dot">✓</span> Ask questions early</div>
+        <div class="info-item"><span class="info-dot">✓</span> Build relationships with teammates</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Don'ts</div>
+        <div class="info-item"><span class="info-dot">✗</span> Get overwhelmed by information overload</div>
+        <div class="info-item"><span class="info-dot">✗</span> Skip virtual coffee chats</div>
+        <div class="info-item"><span class="info-dot">✗</span> Work in isolation</div>
+        <div class="info-item"><span class="info-dot">✗</span> Turn off your camera in meetings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="rm-connection">
+    <div class="section-label">05 — Staying Connected</div>
+    <div class="section-heading">Remote <span class="accent">Culture</span></div>
+    <div class="divider"></div>
+    <p>Building strong connections remotely takes intentionality:</p>
+    <div class="benefit-grid">
+      <div class="benefit-card"><div class="benefit-title">Virtual Coffee Chats</div><div class="benefit-desc">Schedule informal 15-minute calls with teammates to build relationships.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Team Events</div><div class="benefit-desc">Participate in virtual team meetings, happy hours, and company-wide events.</div></div>
+      <div class="benefit-card"><div class="benefit-title">Communication Channels</div><div class="benefit-desc">Use Slack channels to stay in the loop and engage with your team daily.</div></div>
+    </div>
+  </div>
+
+  <div class="section" id="rm-support">
+    <div class="section-label">06 — Support & Resources</div>
+    <div class="section-heading"><span class="accent">We're Here</span> to Help</div>
+    <div class="divider"></div>
+    <p>Don't hesitate to reach out for support:</p>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-title">Your Support Team</div>
+        <div class="info-item"><span class="info-dot">▸</span> Manager (Role & Performance)</div>
+        <div class="info-item"><span class="info-dot">▸</span> Mentor (Day-to-Day Guide)</div>
+        <div class="info-item"><span class="info-dot">▸</span> HR (Benefits & Policies)</div>
+        <div class="info-item"><span class="info-dot">▸</span> IT (Technical Support)</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-title">Key Contacts</div>
+        <div class="info-item"><span class="info-dot">▸</span> HR: hr@corsair.com</div>
+        <div class="info-item"><span class="info-dot">▸</span> IT: itsupport@corsair.com</div>
+        <div class="info-item"><span class="info-dot">▸</span> Check company intranet for more</div>
+        <div class="info-item"><span class="info-dot">▸</span> Use Slack #help channel</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="conclusion">
+    <div class="section-label">Final Thoughts</div>
+    <div class="section-heading" style="color:#fff;">Welcome to Our <span class="accent">Remote</span> Team</div>
+    <div class="divider"></div>
+    <p class="conclusion-body">Remote work at CORSAIR offers flexibility and opportunity. By setting up your space properly, using our tools effectively, and staying connected with your team, you'll thrive from day one. We look forward to your contributions and are excited to have you on our team.</p>
+    <div class="sig">Welcome Home!</div>
+    <div class="address">115 N McCarthy Blvd, Milpitas, CA 95035 • careers.corsair.com</div>
+  </div>
+</div>
+
+<script>
+  function showBooklet(type) {
+    document.getElementById('landing').style.display = 'none';
+    document.querySelectorAll('.booklet').forEach(b => b.classList.remove('active'));
+    document.getElementById('booklet-' + type).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  function showLanding() {
+    document.getElementById('landing').style.display = 'flex';
+    document.querySelectorAll('.booklet').forEach(b => b.classList.remove('active'));
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
