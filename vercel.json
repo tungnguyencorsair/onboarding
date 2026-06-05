@@ -1,0 +1,6 @@
+{
+  "rewrites": [
+    { "source": "/",        "destination": "/CORSAIR_New_Hire_Onboarding_Hub.html" },
+    { "source": "/manager", "destination": "/CORSAIR_Onboarding_Manager_Hub.html" }
+  ]
+}
